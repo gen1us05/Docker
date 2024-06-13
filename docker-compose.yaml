@@ -1,0 +1,32 @@
+version: '1'
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: django_docker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:postgresql/data
+
+  web:
+    build: .
+    command: python3 manage.py runserver 127.0.0.1:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_NAME:django_docker
+      - DB_USER:postgres
+      - DB_PASSWORD:password
+      - DB_HOST:localhost
+      - DB_PORT:5432
+
+volumes:
+  postgres_data:
+
